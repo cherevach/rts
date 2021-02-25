@@ -15,10 +15,10 @@ signals = [0]*N  # array of signals
 w0 = w/n  # frequency
 
 for harmonic in range(n):
-    a = np.random.rand()  # amplitude
-    phi = np.random.rand()  # phase
 
     for t in range(N):
+        a = np.random.rand()  # amplitude
+        phi = np.random.rand()  # phase
         signals[t] += formula(a, w0, t, phi)
 
     w0 += w0
