@@ -24,14 +24,21 @@ def generateSignals(n, w, N):
     return signals
 
 # correlation function
-def correlation(signal1, signal2):
+# combine corr and autocorr methods by using default argument and if/else
+def correlation(signal1, signal2=None):
 
     Mx1 = np.average(signal1)  # math expectation
-    Mx2 = np.average(signal2)  # math expectation
     sd1 = np.std(signal1)  # standart deviation == sqrt(dispersion)
-    sd2 = np.std(signal2)  # standart deviation == sqrt(dispersion)
     length = len(signal1) // 2
     res = []
+    
+    if signal2 is None:
+        signal2 = signal1
+        Mx2 = Mx1  # math expectation
+        sd2 = sd1  # standart deviation == sqrt(dispersion)
+    else:
+        Mx2 = np.average(signal2)  # math expectation
+        sd2 = np.std(signal2)  # standart deviation == sqrt(dispersion)
 
     for t in range(length):
         covarience = 0
@@ -43,9 +50,6 @@ def correlation(signal1, signal2):
 
     return res
 
-# autocorrelation function
-def autocorrelation(signal):
-    return correlation(signal, signal)
 
 signals = generateSignals(n, w, N)
 signals_copy = generateSignals(n, w, N)
@@ -55,7 +59,7 @@ print('Dx:', np.var(signals))  # Dispersion
 
 # plotting
 
-# signals 
+# signals
 plt.plot(signals)
 plt.plot(signals_copy)
 plt.xlabel('time')
@@ -64,14 +68,14 @@ plt.title('Random generated signals 1, 2')
 plt.figure()
 
 # cross-correlation
-plt.plot(correlation(signals, signals_copy))
+plt.plot(correlation(signals, signals_copy)) # call function with two arguments
 plt.xlabel('time')
 plt.ylabel('correlation')
 plt.title('cross-correlation')
 plt.figure()
 
 # autocorrelation
-plt.plot(autocorrelation(signals))
+plt.plot(correlation(signals))  # call function with one argument
 plt.xlabel('time')
 plt.ylabel('correlation')
 plt.title('autocorrelation')
