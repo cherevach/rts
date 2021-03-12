@@ -7,6 +7,7 @@ n = 12  # number of harmonics
 w = 2700  # max frequency
 N = 64  # number of descrete calls
 
+
 # function for calculating random signal
 def formula(a, w, t, phi):
     return a*np.sin(w*t+phi)
@@ -30,20 +31,27 @@ def dftCoeff(pk, N):
     return complex(math.cos(exp), -math.sin(exp))
 
 # function for calculating Discrete Fourier Transform 
+
 def dft(signals):
+    file = open("lab2_1/Wpk_table.txt", "w") # file with Wpk table values
     N = len(signals)
     spectrum = []
+    WpkTable = [[0]*N]*N 
     for p in range(N):
         sum = 0
         for k in range(N):
-            sum+= signals[k] * dftCoeff(p*k, N)
+            WpkTable[p][k] = dftCoeff(p*k, N) # intermediate Wpk values
+            sum+= signals[k] * WpkTable[p][k]
         spectrum.append(abs(sum))
-
+    
+    for p in range(N):
+        for k in range(N):
+            file.write("p = {} : k = {} : {} \n".format(str(p),str(k), str(WpkTable[p][k]))) # write Wpk table to file 
+    file.close()
+       
     return spectrum
 
-
 signals = generateSignals(n, w, N)
-
 
 # plotting
 
